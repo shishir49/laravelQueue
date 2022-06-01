@@ -1,0 +1,49 @@
+Step 1 : Install =>  
+composer require laravel/sanctum
+
+Step 2: Publish => 
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
+Step 3 : php artisan migrate
+
+Step 3 : .env config => 
+
+SESSION_DRIVER=cookie
+SESSION_DOMAIN=localhost
+SESSION_SECURE_COOKIE=false
+SANCTUM_STATEFUL_DOMAINS=localhost,localhost:8080
+
+Step 4 : sanctum.php =>
+
+'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', 
+    'localhost,localhost:8080')),
+
+Step 5 : kernel.php => 
+
+'api' => [
+        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        'throttle:api',
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+    ],
+
+Step 6 : bootstrap.js => 
+
+axios.defaults.withCredentials = true;
+
+Step 7 : cors.php => 
+
+'supports_credentials' => true,
+
+Step 8 : Component => 
+
+created() {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+    axios.get('/api/user').then(response => {
+       localStorage.setItem('userInfo', JSON.stringify(response.data))
+       let getUser = localStorage.getItem('userInfo')
+       this.currentUser = JSON.parse(getUser)
+    }).catch(errors => {
+        console.log(errors)
+    })
+} 
+

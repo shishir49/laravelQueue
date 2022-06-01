@@ -1,0 +1,15 @@
+php artisan queue:table 
+
+php artisan migrate
+
+php artisan make:job job_name
+
+php artisan queue:work
+
+
+customerData::dispatch($data, $header);
+
+.env 
+
+QUEUE_CONNECTION=database
+QUEUE_DRIVER=database
